@@ -1,7 +1,3 @@
-function notImplemented() {
-  throw new Error('Корзина ещё не реализована. Сначала прочитайте тесты.');
-}
-
 function addToCart(cart, product, quantity) {
   if (!Number.isInteger(quantity) || quantity <= 0) {
     throw new RangeError('Количество должно быть положительным целым числом.');
@@ -35,7 +31,18 @@ function removeFromCart(cart, productId) {
 function calculateCartSubtotal(cart) {
   return cart.reduce((subtotal, item) => subtotal + item.price * item.quantity, 0);
 }
-function calculateOrderTotal() { return notImplemented(); }
+function calculateOrderTotal(cart, promoCode) {
+  const subtotal = calculateCartSubtotal(cart);
+  const discount = promoCode === 'SAVE10' && subtotal >= 20000 ? Math.round(subtotal * 0.1) : 0;
+  const delivery = subtotal < 50000 ? 30000 : 0;
+
+  return {
+    subtotal,
+    discount,
+    delivery,
+    total: subtotal - discount + delivery,
+  };
+}
 
 const cartApi = { addToCart, changeQuantity, removeFromCart, calculateCartSubtotal, calculateOrderTotal };
 
